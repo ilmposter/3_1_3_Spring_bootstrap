@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Delete User</title>
+</head>
+<body>
+
+<h1>Are you sure you want to delete this user?</h1>
+<form th:method="POST" th:action="@{'/admin/delete/' + ${user.id}}">
+    <!-- Передаем идентификатор пользователя через форму -->
+    <input type="submit" value="Yes"/>
+</form>
+<button onclick="location.href='/admins';">No</button>
+
+</body>
+</html>
