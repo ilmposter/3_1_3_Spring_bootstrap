@@ -8,7 +8,9 @@ import java.util.List;
 public interface RoleService {
 
     void addRole(Role role);
+
     List<Role> findAll();
+
     Collection<Role> findByName(String name);
 
 }
