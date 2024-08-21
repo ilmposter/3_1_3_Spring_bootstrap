@@ -5,8 +5,9 @@ import org.springframework.stereotype.Service;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.repo.RoleRepository;
 
-import java.util.Collection;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class RoleServiceImp implements RoleService {
@@ -27,7 +28,7 @@ public class RoleServiceImp implements RoleService {
     }
 
     @Override
-    public Collection<Role> findByName(String name) {
-        return roleRepository.findByName(name);
+    public Set<Role> findByName(String roleName) {
+        return roleRepository.findByName(roleName).stream().collect(Collectors.toSet());
     }
 }

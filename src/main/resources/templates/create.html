@@ -1,36 +1,36 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org">
 <head>
-  <meta charset="UTF-8">
-  <title>Create User</title>
+    <meta charset="UTF-8">
+    <title>Create User</title>
 </head>
 <body>
 
 <form th:method="POST" th:action="@{/admin/create}" th:object="${users}">
 
-  <label for="username">Enter username: </label>
-  <input type="text" th:field="*{username}" id="username"/>
-  <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name Error</div>
-  <br/>
+    <label for="username">Enter username: </label>
+    <input type="text" th:field="*{username}" id="username"/>
+    <div style="color:red" th:if="${#fields.hasErrors('username')}" th:errors="*{username}">Name Error</div>
+    <br/>
 
-  <label for="password">Enter password: </label>
-  <input type="password" th:field="*{password}" id="password"/>
-  <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
-  <br/>
+    <label for="password">Enter password: </label>
+    <input type="password" th:field="*{password}" id="password"/>
+    <div style="color:red" th:if="${#fields.hasErrors('password')}" th:errors="*{password}">Password Error</div>
+    <br/>
 
-  <label for="email">Enter email: </label>
-  <input type="text" th:field="*{email}" id="email"/>
-  <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
-  <br/>
+    <label for="email">Enter email: </label>
+    <input type="text" th:field="*{email}" id="email"/>
+    <div style="color:red" th:if="${#fields.hasErrors('email')}" th:errors="*{email}">Email Error</div>
+    <br/>
 
-  <label for="role">Select role:</label>
-  <select id="role" name="role">
-    <option value="ROLE_USER">User Role</option>
-    <option value="ROLE_ADMIN">Admin Role</option>
-  </select>
-  <br/><br/>
+    <label for="role">Select role:</label>
+    <select id="role" name="role">
+        <option value="ROLE_USER">User Role</option>
+        <option value="ROLE_ADMIN">Admin Role</option>
+    </select>
+    <br/><br/>
 
-  <input type="submit" value="Create"/>
+    <input type="submit" value="Create"/>
 
 </form>
 

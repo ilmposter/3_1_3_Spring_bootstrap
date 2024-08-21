@@ -2,18 +2,22 @@ package ru.kata.spring.boot_security.demo.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
 import ru.kata.spring.boot_security.demo.services.UserService;
 
-import javax.validation.Valid;
 import java.security.Principal;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("/admin")
+@Transactional
 public class AdminController {
 
     private final UserService userService;
@@ -40,17 +44,21 @@ public class AdminController {
     }
 
     @PostMapping("/create")
-    public String createUser(@ModelAttribute("users") @Valid User user,
+    public String createUser(@ModelAttribute("users") User user,
                              BindingResult bindingResult,
                              @RequestParam("role") String selectedRole) {
         if (bindingResult.hasErrors()) {
             return "create";
         }
+        Set<Role> roles;
         if ("ROLE_USER".equals(selectedRole)) {
-            user.setRoles(roleService.findByName("ROLE_USER"));
+            roles = roleService.findByName("ROLE_USER").stream().collect(Collectors.toSet());
         } else if ("ROLE_ADMIN".equals(selectedRole)) {
-            user.setRoles(roleService.findAll());
+            roles = roleService.findAll().stream().collect(Collectors.toSet());
+        } else {
+            roles = Set.of(); // Пустой набор ролей, если роль не определена
         }
+        user.setRoles(roles);
         userService.createUser(user);
         return "redirect:/admin";
     }
@@ -64,17 +72,21 @@ public class AdminController {
 
     @PostMapping("/update/{id}")
     public String updateUser(@PathVariable("id") Long id,
-                             @ModelAttribute("user") @Valid User user,
+                             @ModelAttribute("user") User user,
                              BindingResult bindingResult,
                              @RequestParam("role") String selectedRole) {
         if (bindingResult.hasErrors()) {
             return "update";
         }
+        Set<Role> roles;
         if ("ROLE_USER".equals(selectedRole)) {
-            user.setRoles(roleService.findByName("ROLE_USER"));
+            roles = roleService.findByName("ROLE_USER").stream().collect(Collectors.toSet());
         } else if ("ROLE_ADMIN".equals(selectedRole)) {
-            user.setRoles(roleService.findAll());
+            roles = roleService.findAll().stream().collect(Collectors.toSet());
+        } else {
+            roles = Set.of(); // Пустой набор ролей, если роль не определена
         }
+        user.setRoles(roles);
         userService.updateUser(id, user);
         return "redirect:/admin";
     }

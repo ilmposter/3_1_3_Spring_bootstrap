@@ -7,13 +7,13 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.repo.UserRepository;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityNotFoundException;
-import javax.transaction.Transactional;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
@@ -41,6 +41,7 @@ public class UserServiceImp implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userRepository.findByUsername(username);
         if (user == null) {
@@ -54,14 +55,16 @@ public class UserServiceImp implements UserService {
 
     @Override
     public Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles) {
-        return roles.stream().map(r -> new SimpleGrantedAuthority(r.getName())).collect(Collectors.toList());
+        return roles.stream()
+                .map(role -> new SimpleGrantedAuthority(role.getName()))
+                .collect(Collectors.toSet());
     }
 
     @Transactional
     @Override
     public void createUser(User user) {
         if (user.getRoles() == null || user.getRoles().isEmpty()) {
-            user.setRoles(roleService.findByName("ROLE_USER"));
+            user.setRoles(roleService.findByName("ROLE_USER").stream().collect(Collectors.toSet()));
         }
         user.setPassword(bCryptPasswordEncoder.encode(user.getPassword()));
         userRepository.save(user);
@@ -105,7 +108,6 @@ public class UserServiceImp implements UserService {
         userRepository.deleteById(id);
     }
 
-
     @PostConstruct
     public void init() {
         // Создаем роли, если их нет
@@ -125,7 +127,7 @@ public class UserServiceImp implements UserService {
             admin.setUsername("admin");
             admin.setPassword("admin"); // Пароль будет зашифрован в методе createUser
             admin.setEmail("admin@example.com");
-            admin.setRoles(roleService.findByName("ROLE_ADMIN"));
+            admin.setRoles(roleService.findByName("ROLE_ADMIN").stream().collect(Collectors.toSet()));
             createUser(admin);
         }
 
@@ -135,7 +137,7 @@ public class UserServiceImp implements UserService {
             user.setUsername("user");
             user.setPassword("user"); // Пароль будет зашифрован в методе createUser
             user.setEmail("user@example.com");
-            user.setRoles(roleService.findByName("ROLE_USER"));
+            user.setRoles(roleService.findByName("ROLE_USER").stream().collect(Collectors.toSet()));
             createUser(user);
         }
     }

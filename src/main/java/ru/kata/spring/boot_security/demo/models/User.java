@@ -4,11 +4,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Pattern;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Table(name = "users")
@@ -18,26 +17,19 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty(message = "Name must be given")
-    @Pattern(regexp = "^[a-zA-Z]+$",
-            message = "Name must contain only latin symbols")
+
     @Column(name = "username", nullable = false)
     private String username;
 
-    @NotEmpty(message = "Password must be given")
-    @Column(name = "password")
     private String password;
 
-    @NotEmpty(message = "Email must be given")
-    @Email(message = "Non-correct email format")
-    @Column(name = "email", nullable = false)
     private String email;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "users_roles",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private Collection<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -80,7 +72,7 @@ public class User implements UserDetails {
         return roles;
     }
 
-    public void setRoles(Collection<Role> roles) {
+    public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
 

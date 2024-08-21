@@ -1,43 +1,44 @@
 <!DOCTYPE html>
-<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity3">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="https://www.thymeleaf.org"
+>
 <head>
-  <meta charset="UTF-8">
-  <title>Users List</title>
+    <meta charset="UTF-8">
+    <title>Users List</title>
 </head>
 <body>
 
 <table>
-  <thead>
-  <tr>
-    <th>ID</th>
-    <th>Username</th>
-    <th>Email</th>
-    <th>Role</th>
-    <th>Actions</th>
-  </tr>
-  </thead>
-  <tbody>
-  <tr th:each="user : ${users}">
-    <td th:text="${user.id}"></td>
-    <td th:text="${user.username}"></td>
-    <td th:text="${user.email}"></td>
-    <td>
-      <ul>
-        <li th:each="role : ${user.roles}" th:text="${role.name}"></li>
-      </ul>
-    </td>
-    <td>
-      <div th:if="${user.id != currentUser.id}">
-      <a th:href="@{/admin/update/{id}(id=${user.id})}">Update this user</a>
-      </div>
-    </td>
-    <td>
-      <div th:if="${user.id != currentUser.id}">
-        <a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete this user</a>
-      </div>
-    </td>
-  </tr>
-  </tbody>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Username</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="user : ${users}">
+        <td th:text="${user.id}"></td>
+        <td th:text="${user.username}"></td>
+        <td th:text="${user.email}"></td>
+        <td>
+            <ul>
+                <li th:each="role : ${user.roles}" th:text="${role.name}"></li>
+            </ul>
+        </td>
+        <td>
+            <div th:if="${user.id != currentUser.id}">
+                <a th:href="@{/admin/update/{id}(id=${user.id})}">Update this user</a>
+            </div>
+        </td>
+        <td>
+            <div th:if="${user.id != currentUser.id}">
+                <a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete this user</a>
+            </div>
+        </td>
+    </tr>
+    </tbody>
 </table>
 <h2><a href="/user">User Profile</a></h2>
 <h2><a href="/admin/create">Create new user</a></h2>

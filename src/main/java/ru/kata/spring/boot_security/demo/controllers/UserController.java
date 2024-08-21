@@ -22,11 +22,6 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping()
-    public String index() {
-        return "index";
-    }
-
     @GetMapping("/user")
     public String readUser(Principal principal, Model model) {
         String username = principal.getName();

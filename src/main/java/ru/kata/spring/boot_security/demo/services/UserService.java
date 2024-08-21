@@ -15,12 +15,18 @@ import java.util.List;
 public interface UserService extends UserDetailsService {
 
     User findByUsername(String username);
+
     UserDetails loadUserByUsername(String username) throws UsernameNotFoundException;
+
     Collection<? extends GrantedAuthority> mapRolesToAuthorities(Collection<Role> roles);
 
     void createUser(User user);
+
     User readUserById(Long id);
+
     List<User> readAllUsers();
+
     void updateUser(Long id, User user);
+
     void deleteUser(Long id);
 }
