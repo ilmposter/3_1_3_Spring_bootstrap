@@ -4,45 +4,107 @@
 <head>
     <meta charset="UTF-8">
     <title>Users List</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        /* Учет высоты верхнего бара */
+        body {
+            padding-top: 55px; /* Задайте значение в зависимости от высоты navbar */
+        }
+
+        .full-width-btn {
+            width: 100%;
+            margin-bottom: 10px; /* Добавляет отступ между кнопками */
+        }
+    </style>
 </head>
 <body>
 
-<table>
-    <thead>
-    <tr>
-        <th>ID</th>
-        <th>Username</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Actions</th>
-    </tr>
-    </thead>
-    <tbody>
-    <tr th:each="user : ${users}">
-        <td th:text="${user.id}"></td>
-        <td th:text="${user.username}"></td>
-        <td th:text="${user.email}"></td>
-        <td>
-            <ul>
-                <li th:each="role : ${user.roles}" th:text="${role.name}"></li>
-            </ul>
-        </td>
-        <td>
-            <div th:if="${user.id != currentUser.id}">
-                <a th:href="@{/admin/update/{id}(id=${user.id})}">Update this user</a>
-            </div>
-        </td>
-        <td>
-            <div th:if="${user.id != currentUser.id}">
-                <a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete this user</a>
-            </div>
-        </td>
-    </tr>
-    </tbody>
-</table>
-<h2><a href="/user">User Profile</a></h2>
-<h2><a href="/admin/create">Create new user</a></h2>
-<h3><a href="/logout">Log Out</a></h3>
+
+<div class="container-fluid">
+
+    <nav class="navbar fixed-top navbar-dark bg-primary">
+        <div class="user-info">
+            <span th:text="${currentUser.email}">Email</span>
+            with roles:
+            <span th:each="role, iterStat : ${currentUser.roles}"
+                  th:text="${role.name} + (${iterStat.index} < ${currentUser.roles.size() - 1} ? ', ' : '')">Role</span>
+        </div>
+        <div class="logout-container">
+            <a href="/logout" class="btn btn-primary">Log Out</a>
+        </div>
+    </nav> <!-- navbar fixed-top-->
+
+    <div class="row">
+        <div class="col-md-3">
+
+        <ul class="nav flex-column">
+            <li class="nav-item">
+                <a class="nav-link active" aria-current="page" href="/admin">Admin</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="/user">User</a>
+            </li>
+        </ul>
+        </div>
+        <!-- Левый блок -->
+
+
+<!--            <div class="col-md-3 d-flex flex-column">-->
+<!--                <a href="/admin" class="btn btn-primary full-width-btn">Admin</a>-->
+<!--                <a href="/user" class="btn btn-primary full-width-btn">User</a>-->
+<!--            </div>-->
+
+<!--        </div>-->
+
+        <!-- Правый блок с таблицей -->
+        <div class="col-md-9">
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" href="/admin">Users table</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="/user" data-toggle="tab">New user</a>
+                </li>
+            </ul> <!-- nav tabs -->
+
+
+            <table class="table table-striped">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Role</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.email}"></td>
+                    <td>
+                        <ul>
+                            <li th:each="role : ${user.roles}" th:text="${role.name}"></li>
+                        </ul>
+                    </td>
+                    <td>
+                        <div th:if="${user.id != currentUser.id}">
+                            <a th:href="@{/admin/update/{id}(id=${user.id})}">Edit</a>
+                        </div>
+                    </td>
+                    <td>
+                        <div th:if="${user.id != currentUser.id}">
+                            <a th:href="@{/admin/delete/{id}(id=${user.id})}">Delete</a>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
 
 </body>
 </html>
