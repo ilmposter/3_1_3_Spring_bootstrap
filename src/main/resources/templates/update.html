@@ -8,6 +8,10 @@
 
 <h1>Update User</h1>
 
+<!--    Bootstrap 4.6.2 CSS-->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css"
+      integrity="sha384-xOolHFLEh07PJGoPkLv1IbcEPTNtaed2xpHsD9ESMhqIYd0nLMwNLD69Npy4HI+N" crossorigin="anonymous">
+
 <form th:method="POST" th:action="@{/admin/update/{id}(id=${user.id})}" th:object="${user}">
 
     <label for="username">Enter new username: </label>
@@ -34,6 +38,7 @@
     <input type="submit" value="Update"/>
 
 </form>
+
 
 </body>
 </html>

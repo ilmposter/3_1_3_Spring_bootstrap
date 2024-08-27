@@ -6,6 +6,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import ru.kata.spring.boot_security.demo.configs.PasswordEncoder;
 import ru.kata.spring.boot_security.demo.models.Role;
 import ru.kata.spring.boot_security.demo.models.User;
 import ru.kata.spring.boot_security.demo.services.RoleService;
@@ -22,17 +23,21 @@ public class AdminController {
 
     private final UserService userService;
     private final RoleService roleService;
+    private final PasswordEncoder passwordEncoder;
 
     @Autowired
-    public AdminController(UserService userService, RoleService roleService) {
+    public AdminController(UserService userService, RoleService roleService, PasswordEncoder passwordEncoder) {
         this.userService = userService;
         this.roleService = roleService;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @GetMapping()
     public String readAllUsers(Principal principal, Model model) {
         model.addAttribute("users", userService.readAllUsers());
         model.addAttribute("currentUser", userService.findByUsername(principal.getName()));
+        model.addAttribute("user", new User());
+        model.addAttribute("allRoles", roleService.findAll());
         return "admins_page";
     }
 
@@ -78,6 +83,18 @@ public class AdminController {
         if (bindingResult.hasErrors()) {
             return "update";
         }
+// Получаем существующего пользователя из базы данных
+        User existingUser = userService.readUserById(id);
+
+        // Обновляем поля существующего пользователя, кроме пароля
+        existingUser.setUsername(user.getUsername());
+        existingUser.setEmail(user.getEmail());
+
+        // Если поле пароля не пустое, обновляем пароль
+        if (user.getPassword() != null && !user.getPassword().isEmpty()) {
+            existingUser.setPassword(passwordEncoder.bCryptPasswordEncoder().encode(user.getPassword())); // Кодируем новый пароль
+        }
+
         Set<Role> roles;
         if ("ROLE_USER".equals(selectedRole)) {
             roles = roleService.findByName("ROLE_USER").stream().collect(Collectors.toSet());
