@@ -24,14 +24,13 @@ public class UserController {
 
     @GetMapping("/user")
     public String readUser(Principal principal, Model model) {
-        String username = principal.getName();
-        User user = userService.findByUsername(username);
+        User currentUser = userService.findByUsername(principal.getName());
 
-        if (user == null) {
+        if (currentUser == null) {
             return "error"; // Либо перенаправление на страницу с ошибкой
         }
 
-        model.addAttribute("user", user);
+        model.addAttribute("currentUser", currentUser);
         return "user"; // Изменяем название представления на 'user', чтобы соответствовать логике
     }
 }
